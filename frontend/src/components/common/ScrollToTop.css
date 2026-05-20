@@ -1,0 +1,39 @@
+.scroll-top-btn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 9999;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #D12B2B;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(209, 43, 43, 0.4);
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  animation: fadeInUp 0.3s ease;
+}
+
+.scroll-top-btn:hover {
+  background: #B82424;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(209, 43, 43, 0.5);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .scroll-top-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 42px;
+    height: 42px;
+  }
+}

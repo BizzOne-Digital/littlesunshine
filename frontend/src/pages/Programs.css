@@ -1,0 +1,331 @@
+.programs-page { min-height: 100vh; }
+
+.page-hero {
+  padding: 60px 0 40px;
+  transition: background 0.4s;
+}
+
+/* TABS */
+.prog-tabs-wrap {
+  background: var(--white);
+  border-bottom: 2px solid var(--gray-mid);
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 100;
+}
+
+.prog-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.prog-tabs::-webkit-scrollbar { display: none; }
+
+.prog-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: 14px;
+  border: 2px solid var(--gray-mid);
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.prog-tab:hover { border-color: var(--sunshine); }
+
+.prog-tab.active {
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.tab-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.tab-icon svg { overflow: visible; }
+
+.prog-tab span:last-child {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.prog-tab strong {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.prog-tab.active strong { color: white; }
+
+.prog-tab small {
+  font-size: 0.72rem;
+  opacity: 0.75;
+  font-weight: 500;
+}
+
+/* DETAIL */
+.prog-detail { padding: 60px 0 80px; }
+
+.prog-detail-inner {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 50px;
+  align-items: start;
+}
+
+.prog-big-icon {
+  width: 80px; height: 80px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.prog-age-badge {
+  display: inline-block;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 12px;
+}
+
+.prog-info h2 {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.prog-tagline {
+  font-style: italic;
+  color: var(--gray-text);
+  margin-bottom: 20px;
+  font-size: 1.05rem;
+}
+
+.prog-desc {
+  color: var(--gray-text);
+  line-height: 1.8;
+  margin-bottom: 28px;
+  font-size: 1rem;
+}
+
+.prog-info h4 {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 16px;
+}
+
+.prog-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prog-features li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: var(--charcoal);
+}
+
+.f-check {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--gray-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--f-color);
+}
+
+/* FEES CARD */
+.fees-card {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+  border-top: 5px solid var(--fees-color);
+  position: sticky;
+  top: calc(var(--nav-h) + 90px);
+}
+
+.fees-card h3 {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.fees-note {
+  font-size: 0.78rem;
+  color: var(--gray-text);
+  margin-bottom: 20px;
+}
+
+.fees-table {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1.5px solid var(--gray-mid);
+  margin-bottom: 16px;
+}
+
+.fees-thead {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 4px;
+  background: var(--fees-bg);
+  padding: 10px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: var(--fees-color);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.fees-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 4px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--gray-mid);
+  align-items: center;
+}
+
+.fee-schedule { font-size: 0.85rem; font-weight: 600; color: var(--charcoal); }
+.fee-total { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--dark); }
+.fee-parent { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem; }
+.fee-ministry { font-size: 0.82rem; color: var(--gray-text); }
+
+.fees-extra-note {
+  font-size: 0.8rem;
+  color: var(--gray-text);
+  background: var(--gray-light);
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  border-left: 3px solid var(--fees-color);
+  line-height: 1.5;
+}
+
+.fees-info-box {
+  background: var(--fees-bg);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.fees-info-box strong {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--fees-color);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.fees-info-box p { font-size: 0.82rem; color: var(--gray-text); line-height: 1.6; }
+
+.prog-bottom-cta { background: var(--gray-light); padding: 80px 0; text-align: center; }
+.prog-bottom-cta h2 { font-size: 2rem; color: var(--dark); margin-bottom: 12px; }
+.prog-bottom-cta p { color: var(--gray-text); margin-bottom: 32px; font-size: 1rem; }
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+  .prog-detail-inner { grid-template-columns: 1fr; }
+  .fees-card { position: static; }
+}
+
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+  .prog-detail-inner { grid-template-columns: 1fr; }
+  .fees-card { position: static; }
+}
+
+@media (max-width: 700px) {
+  .prog-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow-x: unset;
+  }
+  .prog-tab {
+    flex-shrink: 1;
+    white-space: normal;
+    padding: 12px 14px;
+    gap: 10px;
+    align-items: center;
+    overflow: visible;
+  }
+  .tab-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tab-icon svg {
+    width: 44px;
+    height: 44px;
+    overflow: visible;
+  }
+  .prog-tab span:last-child {
+    flex: 1;
+    min-width: 0;
+  }
+  .prog-tab strong {
+    font-size: 0.88rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+  .prog-tab small {
+    font-size: 0.68rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+}
+
+@media (max-width: 420px) {
+  .prog-tabs { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .prog-tab { padding: 10px 10px; gap: 8px; overflow: visible; }
+  .tab-icon { width: 40px; height: 40px; }
+  .tab-icon svg { width: 40px; height: 40px; overflow: visible; }
+  .prog-tab strong { font-size: 0.8rem; }
+  .prog-tab small { font-size: 0.62rem; }
+
+  .fees-thead, .fees-row { grid-template-columns: 1.5fr 1fr 1fr; }
+  .fees-thead span:last-child, .fees-row .fee-ministry { display: none; }
+  .fees-card { padding: 20px 16px; }
+}

@@ -1,0 +1,24 @@
+.resources-hero { padding: 60px 0; background: linear-gradient(135deg, #E8F4FF 0%, var(--white) 100%); }
+.resources-section { padding: 80px 0; }
+.resource-category { margin-bottom: 60px; }
+.cat-header { display: flex; align-items: center; gap: 16px; padding: 20px 24px; background: var(--cat-bg); border-radius: 16px; margin-bottom: 20px; border-left: 5px solid var(--cat-color); }
+.cat-icon { color: var(--cat-color); }
+.cat-header h2 { font-size: 1.3rem; font-weight: 800; color: var(--dark); }
+.resource-cards { display: flex; flex-direction: column; gap: 16px; }
+.resource-card { display: flex; align-items: center; justify-content: space-between; gap: 20px; background: var(--white); border-radius: 16px; padding: 24px 28px; box-shadow: 0 2px 16px rgba(0,0,0,0.05); border: 1.5px solid var(--gray-mid); text-decoration: none; color: inherit; transition: all 0.25s; }
+.resource-card:hover { border-color: var(--r-color); transform: translateX(4px); box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+.rc-type { display: inline-block; font-size: 0.72rem; font-family: 'Nunito', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--r-color); margin-bottom: 6px; }
+.rc-content h3 { font-size: 1.05rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+.rc-content p { font-size: 0.88rem; color: var(--gray-text); line-height: 1.6; }
+.rc-arrow { display: flex; align-items: center; gap: 6px; flex-shrink: 0; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.82rem; padding: 8px 16px; border-radius: 50px; border: 2px solid currentColor; transition: all 0.2s; }
+.resource-card:hover .rc-arrow { background: var(--r-color); color: white; }
+
+.resources-disclaimer { padding: 40px 0; background: var(--gray-light); }
+.resources-disclaimer .container { max-width: 800px; }
+.resources-disclaimer p { font-size: 0.85rem; color: var(--gray-text); line-height: 1.7; }
+.resources-disclaimer strong { color: var(--charcoal); }
+
+@media (max-width: 600px) {
+  .resource-card { flex-direction: column; align-items: flex-start; }
+  .rc-arrow { align-self: flex-end; }
+}
