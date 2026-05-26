@@ -32,6 +32,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/waitlist', require('./routes/waitlist'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api', require('./routes/careers')); // ✅ CAREERS ROUTE ADDED
 
 // Health check
 app.get('/api/health', (req, res) => {
