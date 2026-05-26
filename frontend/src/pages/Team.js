@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import api from '../api';
+import toast from 'react-hot-toast';
 import './Team.css';
 
 const PersonSVG = ({ color = '#E8B84B', initials = 'EC' }) => (
@@ -38,6 +40,56 @@ const teamMembers = [
 ];
 
 export default function Team() {
+  const [form, setForm] = useState({ name: '', email: '', phone: '', position: '', message: '' });
+  const [resumeFile, setResumeFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+
+  const handleChange = e => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const handleFileChange = e => {
+    const file = e.target.files[0];
+    if (file) {
+      const allowed = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowed.includes(file.type)) {
+        toast.error('Please upload a PDF or Word document.');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('File size must be under 5MB.');
+        return;
+      }
+      setResumeFile(file);
+    }
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    if (!form.name || !form.email || !form.message) {
+      toast.error('Please fill in all required fields.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      Object.entries(form).forEach(([k, v]) => formData.append(k, v));
+      if (resumeFile) formData.append('resume', resumeFile);
+
+      await api.post('/api/careers', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      toast.success('Application sent! We\'ll be in touch soon.');
+      setForm({ name: '', email: '', phone: '', position: '', message: '' });
+      setResumeFile(null);
+      setShowForm(false);
+    } catch (err) {
+      toast.error('Failed to send. Please email us directly at littlesunshineelc23@gmail.com');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="team-page">
       <section className="page-hero team-hero">
@@ -79,10 +131,74 @@ export default function Team() {
             <h2 className="section-title">Want to Join Our <span>Team?</span></h2>
             <p className="section-sub">We are always looking for passionate, dedicated early childhood educators to join the Little Sunshine family.</p>
           </div>
-          <a href="mailto:littlesunshineelc23@gmail.com?subject=Career Inquiry" className="btn-primary">
+          <button className="btn-primary" onClick={() => setShowForm(true)}>
             Send Your Resume
-          </a>
+          </button>
         </div>
+
+        {showForm && (
+          <div className="career-modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowForm(false); }}>
+            <div className="career-modal">
+              <button className="modal-close" onClick={() => setShowForm(false)} aria-label="Close">✕</button>
+              <h2>Career Application</h2>
+              <p>Fill out the form below and attach your resume. We'll review and get back to you!</p>
+              <form onSubmit={handleSubmit}>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Full Name *</label>
+                    <input name="name" value={form.name} onChange={handleChange} placeholder="Your full name" required />
+                  </div>
+                  <div className="form-group">
+                    <label>Email Address *</label>
+                    <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="your@email.com" required />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Phone Number</label>
+                    <input name="phone" value={form.phone} onChange={handleChange} placeholder="Optional" />
+                  </div>
+                  <div className="form-group">
+                    <label>Position of Interest</label>
+                    <select name="position" value={form.position} onChange={handleChange}>
+                      <option value="">Select a position</option>
+                      <option>Early Childhood Educator</option>
+                      <option>Infant Caregiver</option>
+                      <option>Support Staff</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Cover Letter / Message *</label>
+                  <textarea name="message" value={form.message} onChange={handleChange} placeholder="Tell us about yourself and why you'd like to join our team..." rows={4} required />
+                </div>
+                <div className="form-group">
+                  <label>Attach Resume (PDF or Word, max 5MB)</label>
+                  <div className="file-upload-box">
+                    <input
+                      type="file"
+                      id="resume-upload"
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleFileChange}
+                      style={{ display: 'none' }}
+                    />
+                    <label htmlFor="resume-upload" className="file-upload-label">
+                      {resumeFile ? (
+                        <span className="file-selected">📎 {resumeFile.name}</span>
+                      ) : (
+                        <span>📎 Click to attach your resume</span>
+                      )}
+                    </label>
+                  </div>
+                </div>
+                <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} disabled={loading}>
+                  {loading ? 'Sending...' : 'Submit Application'}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );

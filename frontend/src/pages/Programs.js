@@ -36,7 +36,6 @@ const programs = [
       'Early developmental milestone support',
       'Nutritious meals and formula support',
       'Regular developmental updates to parents',
-      'Low child-to-caregiver ratio',
     ],
     fees: [
       { schedule: 'Full Time', fee: '$832.00', parentPortion: '$217.50', ministry: '$614.50' },
@@ -203,12 +202,12 @@ export default function Programs() {
           <div className="prog-fees-side">
             <div className="fees-card" style={{ '--fees-color': prog.color, '--fees-bg': prog.bg }}>
               <h3>Fee Structure</h3>
-              <p className="fees-note">Fees effective 2024-2025. Subject to annual review.</p>
+              <p className="fees-note">Fees effective 2025-2026.</p>
               <div className="fees-table">
                 <div className="fees-thead">
                   <span>Schedule</span>
                   <span>Total Fee</span>
-                  <span>Your Portion</span>
+                  <span>Parent Portion</span>
                   <span>Ministry</span>
                 </div>
                 {prog.fees.map((f, i) => (

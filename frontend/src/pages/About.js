@@ -38,8 +38,7 @@ export default function About() {
         <div className="container about-hero-inner">
           <div>
             <span className="section-tag">About Us</span>
-            <h1 className="section-title">Our Story & <span>Mission</span></h1>
-            <p className="section-sub">Little Sunshine Early Learning Centre is built on the belief that every child deserves a bright, nurturing start to their educational journey.</p>
+            <h1 className="section-title">Our <span>Philosophy</span></h1>
           </div>
           <MissionSVG />
         </div>
@@ -52,14 +51,14 @@ export default function About() {
             <div className="welcome-quote">
               <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M8 20C8 13.4 13.4 8 20 8v8c-2.2 0-4 1.8-4 4v12H8V20zm24 0C32 13.4 37.4 8 44 8v8c-2.2 0-4 1.8-4 4v12H32V20z" fill="#E8B84B" opacity="0.3"/></svg>
               <p>
-                Welcome to Little Sunshine Early Childhood Learning Center, where children learn, grow, and thrive in a safe, caring, and inclusive environment. We are committed to providing high-quality early childhood education that supports each child's social, emotional, cognitive, and physical development through play-based learning and meaningful experiences.
+                Children are a part of a family, community and a busy interactive world. Our Center's curriculum reflects the importance of connections between all these relationships with each other, their family, their culture, their community, and the world around them. Our aim is to develop positive bonds and connections between our children, our families, and our educators. Nurturing each child's identity as a "Mighty Learner and Citizen."
               </p>
             </div>
             <p style={{ color: 'var(--gray-text)', lineHeight: 1.8, marginTop: '20px' }}>
-              Our Centre offers nurturing care, engaging educational activities, nutritious meals and snacks, and a welcoming environment where children feel valued, respected, and encouraged to explore their unique interests and abilities. We believe in building strong partnerships with families and working together to support every child's learning journey.
+              We believe that to enhance and foster children's ability to learn through play, they need opportunities to explore the world around them. Children at the center are given every opportunity to develop their independence, personal responsibility, physical, social, cognitive, creative, and problem-solving skills in a supportive environment. Although the educators formulate daily routines and program plans, these serve as guidelines only. Flexibility, rather than total structure, is intent.
             </p>
             <p style={{ color: 'var(--gray-text)', lineHeight: 1.8, marginTop: '16px' }}>
-              Our dedicated team strives to create a positive, supportive, and culturally inclusive environment that helps children build confidence, independence, and a lifelong love of learning.
+              Through active learning experiences that incorporate what the children are interested in, the children are encouraged to be the authors of their own learning. We believe in natural connections through play; they engage in self-discovery, problem-solving, and collaboration with their peers. As they explore the environment examining relationships between objects, actions and people, the children learn a variety of concepts that they will later apply to new situations and experiences.
             </p>
           </div>
         </div>
