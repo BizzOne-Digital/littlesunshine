@@ -57,7 +57,7 @@ const resources = [
       {
         title: "Health Canada's Healthy Eating Strategy",
         desc: 'Health Canada\'s vision and strategy for healthy eating across Canada, including resources for young children.',
-        url: 'https://www.canada.ca/en/services/health/campaigns/vision-healthy-canada/healthy-eating.html',
+        url: 'https://www.saskhealthauthority.ca/',
         type: 'Government Resource',
       },
     ],
@@ -71,7 +71,7 @@ const resources = [
       {
         title: 'Licensee Manual',
         desc: 'The official Ministry of Education licensing manual for child care providers in Saskatchewan.',
-        url: 'http://publications.gov.sk.ca/details.cfm?p=76930',
+        url: 'https://21be2725-069d-4cdf-8c5f-bd7fc3740155.filesusr.com/ugd/e086f8_fe5eb28289da47de84ecf9be0cfad72c.pdf',
         type: 'PDF Document',
       },
     ],
@@ -134,12 +134,7 @@ const resources = [
         url: 'https://seca-sk.org',
         type: 'Professional Association',
       },
-      {
-        title: 'City of Swift Current – Safe Places Certificates',
-        desc: 'Information about the Safe Places program in Swift Current.',
-        url: 'http://www.safeplacessk.ca/',
-        type: 'City Resource',
-      },
+      
     ],
   },
   {
