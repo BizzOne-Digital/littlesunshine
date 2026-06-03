@@ -2,23 +2,28 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const careersRouter = require('./routes/careers');
 
 dotenv.config();
 
 const app = express();
 
-// CORS - allow frontend Vercel domain + localhost
+// CORS - allow all frontend URLs (custom domain + vercel + localhost)
 const allowedOrigins = [
   'http://localhost:3000',
-  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL,        // e.g. https://littlesunshine.ca
+  process.env.FRONTEND_URL_WWW,    // e.g. https://www.littlesunshine.ca
+  process.env.FRONTEND_VERCEL_URL, // e.g. https://little-sunshine.vercel.app
 ].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (mobile apps, Postman, curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('CORS blocked origin:', origin);
+      console.log('Allowed origins:', allowedOrigins);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -33,7 +38,6 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/waitlist', require('./routes/waitlist'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/admin', require('./routes/admin'));
-app.use('/api', careersRouter);
 
 // Health check
 app.get('/api/health', (req, res) => {
