@@ -10,15 +10,18 @@ const app = express();
 // CORS - allow all frontend URLs (custom domain + vercel + localhost)
 const allowedOrigins = [
   'http://localhost:3000',
-  process.env.FRONTEND_URL,        // e.g. https://littlesunshine.ca
-  process.env.FRONTEND_URL_WWW,    // e.g. https://www.littlesunshine.ca
-  process.env.FRONTEND_VERCEL_URL, // e.g. https://little-sunshine.vercel.app
+  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL_WWW,
+  process.env.FRONTEND_VERCEL_URL,
 ].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, curl)
     if (!origin) return callback(null, true);
+    
+    // Allow any vercel.app subdomain (preview deployments)
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
+    
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -45,15 +48,41 @@ app.get('/api/health', (req, res) => {
 });
 
 // MongoDB connection (cached for serverless)
-let isConnected = false;
+let cached = global.mongoose || { conn: null, promise: null };
+global.mongoose = cached;
+
 const connectDB = async () => {
-  if (isConnected) return;
-  await mongoose.connect(process.env.MONGO_URI);
-  isConnected = true;
-  console.log('MongoDB connected');
+  if (cached.conn) return cached.conn;
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      bufferCommands: false,
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+    console.log('MongoDB connected');
+  } catch (err) {
+    cached.promise = null; // retry karne dega agli baar
+    console.error('MongoDB connection error:', err);
+    throw err;
+  }
+
+  return cached.conn;
 };
 
-connectDB().catch(err => console.error('MongoDB error:', err));
+// Middleware: har request se pehle DB connect karo
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(500).json({ message: 'Database connection failed', error: err.message });
+  }
+});
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {
