@@ -14,38 +14,55 @@ router.post('/', async (req, res) => {
   try {
     const entry = await Waitlist.create(req.body);
 
-    // Send confirmation email to parent
     try {
+      // Email to PARENT - FROM shows centre name, Reply-To is centre email
       await transporter.sendMail({
         from: `"Little Sunshine ELC" <${process.env.EMAIL_USER}>`,
         to: entry.email,
+        replyTo: `"Little Sunshine ELC" <${process.env.EMAIL_USER}>`,
         subject: 'Waitlist Application Received - Little Sunshine ELC',
         html: `
-          <h2>Thank you, ${entry.parentName}!</h2>
-          <p>We have received your waitlist application for <strong>${entry.childName}</strong>.</p>
-          <p><strong>Program:</strong> ${entry.programType} - ${entry.scheduleType}</p>
-          <p>Our team will contact you within 2-3 business days.</p>
-          <p>If you have any questions, please call us at <strong>306-750-0848</strong> or email <strong>littlesunshineelc23@gmail.com</strong></p>
-          <br/>
-          <p>Warm regards,<br/>Little Sunshine Early Learning Centre Team</p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #D12B2B;">Thank you, ${entry.parentName}!</h2>
+            <p>We have received your waitlist application for <strong>${entry.childName}</strong>.</p>
+            <p><strong>Program:</strong> ${entry.programType} - ${entry.scheduleType}</p>
+            <p>Our team will contact you within 2-3 business days.</p>
+            <p>If you have any questions, please call us at <strong>306-750-0848</strong> or email <strong>${process.env.EMAIL_USER}</strong></p>
+            <br/>
+            <p>Warm regards,<br/><strong>Little Sunshine Early Learning Centre</strong></p>
+          </div>
         `
       });
 
-      // Notify admin
+      // =====================================================
+      // FIX 1: FROM shows PARENT name so admin sees their name
+      // FIX 2: Reply-To is parent email so replies go to parent NOT back to centre inbox
+      // =====================================================
       await transporter.sendMail({
-        from: `"Little Sunshine Website" <${process.env.EMAIL_USER}>`,
+        from: `"${entry.parentName}" <${process.env.EMAIL_USER}>`,
+        replyTo: `"${entry.parentName}" <${entry.email}>`,
         to: process.env.ADMIN_EMAIL,
         subject: `New Waitlist Application - ${entry.childName}`,
         html: `
-          <h2>New Waitlist Application</h2>
-          <p><strong>Parent:</strong> ${entry.parentName}</p>
-          <p><strong>Child:</strong> ${entry.childName}</p>
-          <p><strong>Program:</strong> ${entry.programType} - ${entry.scheduleType}</p>
-          <p><strong>Email:</strong> ${entry.email}</p>
-          <p><strong>Phone:</strong> ${entry.phone}</p>
-          <p>Login to admin panel to view full details.</p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #2D7A3A;">New Waitlist Application</h2>
+            <table style="width:100%; border-collapse: collapse;">
+              <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Parent Name</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.parentName}</td></tr>
+              <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Child Name</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.childName}</td></tr>
+              <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Program</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.programType} - ${entry.scheduleType}</td></tr>
+              <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Parent Email</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.email}</td></tr>
+              <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Phone</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.phone}</td></tr>
+              ${entry.desiredStartDate ? `<tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Start Date</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${new Date(entry.desiredStartDate).toLocaleDateString()}</td></tr>` : ''}
+              ${entry.additionalNotes ? `<tr><td style="padding:8px;"><strong>Notes</strong></td><td style="padding:8px;">${entry.additionalNotes}</td></tr>` : ''}
+            </table>
+            <br/>
+            <p style="color:#666; font-size:13px;">
+              ✅ To reply to this parent, just hit Reply — it will go directly to <strong>${entry.email}</strong>
+            </p>
+          </div>
         `
       });
+
     } catch (emailErr) {
       console.error('Email error:', emailErr.message);
     }
