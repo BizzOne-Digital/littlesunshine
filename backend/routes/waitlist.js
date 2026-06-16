@@ -4,7 +4,7 @@ const Waitlist = require('../models/Waitlist');
 const { protect } = require('../middleware/auth');
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
+const getTransporter = () => nodemailer.createTransport({
   service: 'gmail',
   auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
 });
@@ -15,50 +15,98 @@ router.post('/', async (req, res) => {
     const entry = await Waitlist.create(req.body);
 
     try {
-      // Email to PARENT
+      const transporter = getTransporter();
+
+      // 1. Confirmation email TO PARENT
       await transporter.sendMail({
         from: `"Little Sunshine ELC" <${process.env.EMAIL_USER}>`,
         to: entry.email,
-        replyTo: `"Little Sunshine ELC" <${process.env.EMAIL_USER}>`,
+        replyTo: process.env.EMAIL_USER,
         subject: 'Waitlist Application Received - Little Sunshine ELC',
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #D12B2B;">Thank you, ${entry.parentName}!</h2>
-            <p>We have received your waitlist application for <strong>${entry.childName}</strong>.</p>
-            <p><strong>Program:</strong> ${entry.programType} - ${entry.scheduleType}</p>
-            <p>Our team will contact you within 2-3 business days.</p>
-            <p>If you have any questions, please call us at <strong>306-750-0848</strong> or email <strong>${process.env.EMAIL_USER}</strong></p>
-            <br/>
-            <p>Warm regards,<br/><strong>Little Sunshine Early Learning Centre</strong></p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: #D12B2B; padding: 20px; border-radius: 10px 10px 0 0; text-align:center;">
+              <h1 style="color:white; margin:0; font-size:22px;">Little Sunshine ELC</h1>
+              <p style="color:rgba(255,255,255,0.85); margin:6px 0 0;">Early Learning Centre</p>
+            </div>
+            <div style="background:#fff; padding:30px; border:1px solid #eee; border-radius: 0 0 10px 10px;">
+              <h2 style="color:#2D7A3A;">Application Received!</h2>
+              <p>Dear <strong>${entry.parentName}</strong>,</p>
+              <p>We have received your waitlist application for <strong>${entry.childName}</strong>.</p>
+              <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                <tr style="background:#f9f9f9;"><td style="padding:10px; border:1px solid #eee;"><strong>Child Name</strong></td><td style="padding:10px; border:1px solid #eee;">${entry.childName}</td></tr>
+                <tr><td style="padding:10px; border:1px solid #eee;"><strong>Program</strong></td><td style="padding:10px; border:1px solid #eee;">${entry.programType} - ${entry.scheduleType}</td></tr>
+                ${entry.desiredStartDate ? `<tr style="background:#f9f9f9;"><td style="padding:10px; border:1px solid #eee;"><strong>Desired Start Date</strong></td><td style="padding:10px; border:1px solid #eee;">${new Date(entry.desiredStartDate).toLocaleDateString()}</td></tr>` : ''}
+              </table>
+              <p>Our team will contact you within <strong>2-3 business days</strong>.</p>
+              <p>Questions? Call us at <strong>306-750-0848</strong></p>
+              <br/>
+              <p style="color:#888; font-size:13px;">Warm regards,<br/><strong>Little Sunshine Early Learning Centre</strong></p>
+            </div>
           </div>
         `
       });
 
-      // Email to ADMIN
-      // Using +waitlist alias so Gmail shows parent name instead of "me"
-      const adminAlias = process.env.EMAIL_USER.replace('@gmail.com', '+waitlist@gmail.com');
-
+      // 2. Notification email TO ADMIN
+      // Gmail always shows authenticated account name as sender
+      // So we put parent info clearly in SUBJECT and top of email body
       await transporter.sendMail({
-        from: `"${entry.parentName}" <${process.env.EMAIL_USER}>`,
+        from: `"Little Sunshine Website" <${process.env.EMAIL_USER}>`,
+        to: process.env.ADMIN_EMAIL,
         replyTo: `"${entry.parentName}" <${entry.email}>`,
-        to: adminAlias,
-        subject: `New Waitlist Application - ${entry.childName}`,
+        subject: `📋 ${entry.parentName} — New Waitlist (${entry.programType})`,
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #2D7A3A;">New Waitlist Application</h2>
-            <table style="width:100%; border-collapse: collapse;">
-              <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Parent Name</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.parentName}</td></tr>
-              <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Child Name</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.childName}</td></tr>
-              <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Program</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.programType} - ${entry.scheduleType}</td></tr>
-              <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Parent Email</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.email}</td></tr>
-              <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Phone</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.phone}</td></tr>
-              ${entry.desiredStartDate ? `<tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Desired Start Date</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${new Date(entry.desiredStartDate).toLocaleDateString()}</td></tr>` : ''}
-              ${entry.additionalNotes ? `<tr><td style="padding:8px;"><strong>Notes</strong></td><td style="padding:8px;">${entry.additionalNotes}</td></tr>` : ''}
-            </table>
-            <br/>
-            <p style="color:#666; font-size:13px;">
-              ✅ Hit <strong>Reply</strong> to respond directly to ${entry.parentName} at ${entry.email}
-            </p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: #2D7A3A; padding: 16px 20px; border-radius: 10px 10px 0 0;">
+              <h2 style="color:white; margin:0; font-size:18px;">📋 New Waitlist Application</h2>
+            </div>
+            <div style="background:#fff; padding:24px; border:1px solid #eee; border-radius: 0 0 10px 10px;">
+
+              <div style="background:#E8F5EA; border-left:4px solid #2D7A3A; padding:14px 16px; border-radius:0 8px 8px 0; margin-bottom:20px;">
+                <p style="margin:0; font-size:18px; font-weight:bold; color:#1A1A1A;">${entry.parentName}</p>
+                <p style="margin:4px 0 0; color:#2D7A3A; font-size:14px;">${entry.email} &nbsp;|&nbsp; ${entry.phone}</p>
+              </div>
+
+              <table style="width:100%; border-collapse:collapse;">
+                <tr style="background:#f9f9f9;">
+                  <td style="padding:10px 14px; border:1px solid #eee; width:40%;"><strong>Child Name</strong></td>
+                  <td style="padding:10px 14px; border:1px solid #eee;">${entry.childName}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px; border:1px solid #eee;"><strong>Date of Birth</strong></td>
+                  <td style="padding:10px 14px; border:1px solid #eee;">${entry.childDOB ? new Date(entry.childDOB).toLocaleDateString() : 'Not provided'}</td>
+                </tr>
+                <tr style="background:#f9f9f9;">
+                  <td style="padding:10px 14px; border:1px solid #eee;"><strong>Program</strong></td>
+                  <td style="padding:10px 14px; border:1px solid #eee;">${entry.programType}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px; border:1px solid #eee;"><strong>Schedule</strong></td>
+                  <td style="padding:10px 14px; border:1px solid #eee;">${entry.scheduleType}</td>
+                </tr>
+                ${entry.desiredStartDate ? `
+                <tr style="background:#f9f9f9;">
+                  <td style="padding:10px 14px; border:1px solid #eee;"><strong>Start Date</strong></td>
+                  <td style="padding:10px 14px; border:1px solid #eee;">${new Date(entry.desiredStartDate).toLocaleDateString()}</td>
+                </tr>` : ''}
+                ${entry.address ? `
+                <tr>
+                  <td style="padding:10px 14px; border:1px solid #eee;"><strong>Address</strong></td>
+                  <td style="padding:10px 14px; border:1px solid #eee;">${entry.address}</td>
+                </tr>` : ''}
+                ${entry.additionalNotes ? `
+                <tr style="background:#f9f9f9;">
+                  <td style="padding:10px 14px; border:1px solid #eee;"><strong>Notes</strong></td>
+                  <td style="padding:10px 14px; border:1px solid #eee;">${entry.additionalNotes}</td>
+                </tr>` : ''}
+              </table>
+
+              <div style="margin-top:20px; padding:12px 16px; background:#FFF8E7; border-radius:8px; border:1px solid #E8B84B;">
+                <p style="margin:0; font-size:13px; color:#555;">
+                  💬 Hit <strong>Reply</strong> to respond directly to <strong>${entry.parentName}</strong> at <a href="mailto:${entry.email}">${entry.email}</a>
+                </p>
+              </div>
+            </div>
           </div>
         `
       });
