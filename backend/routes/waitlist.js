@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
     const entry = await Waitlist.create(req.body);
 
     try {
-      // Email to PARENT - FROM shows centre name, Reply-To is centre email
+      // Email to PARENT
       await transporter.sendMail({
         from: `"Little Sunshine ELC" <${process.env.EMAIL_USER}>`,
         to: entry.email,
@@ -34,14 +34,14 @@ router.post('/', async (req, res) => {
         `
       });
 
-      // =====================================================
-      // FIX 1: FROM shows PARENT name so admin sees their name
-      // FIX 2: Reply-To is parent email so replies go to parent NOT back to centre inbox
-      // =====================================================
+      // Email to ADMIN
+      // Using +waitlist alias so Gmail shows parent name instead of "me"
+      const adminAlias = process.env.EMAIL_USER.replace('@gmail.com', '+waitlist@gmail.com');
+
       await transporter.sendMail({
         from: `"${entry.parentName}" <${process.env.EMAIL_USER}>`,
         replyTo: `"${entry.parentName}" <${entry.email}>`,
-        to: process.env.ADMIN_EMAIL,
+        to: adminAlias,
         subject: `New Waitlist Application - ${entry.childName}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -52,12 +52,12 @@ router.post('/', async (req, res) => {
               <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Program</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.programType} - ${entry.scheduleType}</td></tr>
               <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Parent Email</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.email}</td></tr>
               <tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Phone</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${entry.phone}</td></tr>
-              ${entry.desiredStartDate ? `<tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Start Date</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${new Date(entry.desiredStartDate).toLocaleDateString()}</td></tr>` : ''}
+              ${entry.desiredStartDate ? `<tr><td style="padding:8px; border-bottom:1px solid #eee;"><strong>Desired Start Date</strong></td><td style="padding:8px; border-bottom:1px solid #eee;">${new Date(entry.desiredStartDate).toLocaleDateString()}</td></tr>` : ''}
               ${entry.additionalNotes ? `<tr><td style="padding:8px;"><strong>Notes</strong></td><td style="padding:8px;">${entry.additionalNotes}</td></tr>` : ''}
             </table>
             <br/>
             <p style="color:#666; font-size:13px;">
-              ✅ To reply to this parent, just hit Reply — it will go directly to <strong>${entry.email}</strong>
+              ✅ Hit <strong>Reply</strong> to respond directly to ${entry.parentName} at ${entry.email}
             </p>
           </div>
         `
