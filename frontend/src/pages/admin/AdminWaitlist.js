@@ -14,17 +14,19 @@ export default function AdminWaitlist() {
   const { logout } = useAuth();
   const { admin } = useAuth();
   const [entries, setEntries] = useState([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState({ status: '', program: '' });
   const [selected, setSelected] = useState(null);
 
   const fetchEntries = async () => {
     try {
-      const params = {};
+      const params = { limit: 1000 };
       if (filter.status) params.status = filter.status;
       if (filter.program) params.program = filter.program;
       const res = await api.get('/api/waitlist', { params });
       setEntries(res.data.entries);
+      setTotal(res.data.total);
     } catch { toast.error('Failed to load entries'); }
     finally { setLoading(false); }
   };
@@ -70,7 +72,7 @@ export default function AdminWaitlist() {
 
       <main className="admin-main">
         <header className="admin-header">
-          <div><h1>Waitlist Management</h1><p>{entries.length} total entries</p></div>
+          <div><h1>Waitlist Management</h1><p>{total} total entries</p></div>
         </header>
 
         {/* Filters */}
