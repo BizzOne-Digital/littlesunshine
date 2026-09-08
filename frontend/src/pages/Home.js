@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../api';
+import toast from 'react-hot-toast';
 import './Home.css';
 
 /* ---- SVG Icons ---- */
@@ -117,6 +119,33 @@ const HeroScene = () => (
 );
 
 export default function Home() {
+  const [reviews, setReviews] = useState([]);
+  const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, message: '' });
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    api.get('/api/reviews/approved')
+      .then(res => setReviews(res.data.reviews))
+      .catch(() => {});
+  }, []);
+
+  const handleReviewChange = e => setReviewForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const handleReviewSubmit = async e => {
+    e.preventDefault();
+    if (!reviewForm.name || !reviewForm.message) { toast.error('Please fill in your name and review.'); return; }
+    setSubmitting(true);
+    try {
+      await api.post('/api/reviews', reviewForm);
+      toast.success('Thank you! Your review is submitted for approval.');
+      setReviewForm({ name: '', rating: 5, message: '' });
+    } catch {
+      toast.error('Failed to submit review. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="home">
       {/* HERO */}
@@ -232,6 +261,51 @@ export default function Home() {
           </div>
           <div className="programs-cta">
             <Link to="/programs" className="btn-sunshine">View All Programs & Fees <ArrowSVG /></Link>
+          </div>
+        </div>
+      </section>
+
+      {/* REVIEWS */}
+      <section className="reviews-section">
+        <div className="container">
+          <div className="section-header center">
+            <span className="section-tag">Testimonials</span>
+            <h2 className="section-title">What <span>Families Say</span></h2>
+            <p className="section-sub">Hear from the parents and families who trust us with their little ones.</p>
+          </div>
+
+          {reviews.length > 0 && (
+            <div className="reviews-grid">
+              {reviews.map(r => (
+                <div key={r._id} className="review-card card">
+                  <div className="review-stars">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
+                  <p className="review-message">"{r.message}"</p>
+                  <span className="review-name">— {r.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="review-form-wrap card">
+            <h3>Leave a Review</h3>
+            <form onSubmit={handleReviewSubmit} className="review-form">
+              <input
+                type="text" name="name" placeholder="Your Name"
+                value={reviewForm.name} onChange={handleReviewChange} required
+              />
+              <select name="rating" value={reviewForm.rating} onChange={handleReviewChange}>
+                {[5, 4, 3, 2, 1].map(n => (
+                  <option key={n} value={n}>{'★'.repeat(n)}{'☆'.repeat(5 - n)}</option>
+                ))}
+              </select>
+              <textarea
+                name="message" placeholder="Share your experience with us..."
+                value={reviewForm.message} onChange={handleReviewChange} rows={4} required
+              />
+              <button type="submit" className="btn-primary" disabled={submitting}>
+                {submitting ? 'Submitting...' : 'Submit Review'}
+              </button>
+            </form>
           </div>
         </div>
       </section>

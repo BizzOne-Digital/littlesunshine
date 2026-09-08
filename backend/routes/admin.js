@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Waitlist = require('../models/Waitlist');
 const Contact = require('../models/Contact');
+const Review = require('../models/Review');
 const { protect } = require('../middleware/auth');
 
 // GET /api/admin/stats - Dashboard statistics
@@ -11,6 +12,7 @@ router.get('/stats', protect, async (req, res) => {
     const pendingWaitlist = await Waitlist.countDocuments({ status: 'Pending' });
     const enrolledCount = await Waitlist.countDocuments({ status: 'Enrolled' });
     const unreadMessages = await Contact.countDocuments({ isRead: false });
+    const pendingReviews = await Review.countDocuments({ status: 'Pending' });
 
     const programBreakdown = await Waitlist.aggregate([
       { $group: { _id: '$programType', count: { $sum: 1 } } }
@@ -26,6 +28,7 @@ router.get('/stats', protect, async (req, res) => {
         pendingWaitlist,
         enrolledCount,
         unreadMessages,
+        pendingReviews,
         programBreakdown,
         recentWaitlist,
         recentMessages

@@ -54,6 +54,7 @@ export default function AdminMessages() {
           <Link to="/admin" className="sn-link">📊 Dashboard</Link>
           <Link to="/admin/waitlist" className="sn-link">📋 Waitlist</Link>
           <Link to="/admin/messages" className="sn-link active">✉️ Messages</Link>
+          <Link to="/admin/reviews" className="sn-link">⭐ Reviews</Link>
         </nav>
         <div className="sidebar-footer">
           <p className="admin-name">{admin?.name}</p>

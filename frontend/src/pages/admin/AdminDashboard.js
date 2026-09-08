@@ -51,6 +51,10 @@ export default function AdminDashboard() {
             <span>✉️</span> Messages
             {stats?.unreadMessages > 0 && <span className="badge">{stats.unreadMessages}</span>}
           </Link>
+          <Link to="/admin/reviews" className="sn-link">
+            <span>⭐</span> Reviews
+            {stats?.pendingReviews > 0 && <span className="badge">{stats.pendingReviews}</span>}
+          </Link>
         </nav>
         <div className="sidebar-footer">
           <p className="admin-name">{admin?.name}</p>

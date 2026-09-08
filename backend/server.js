@@ -70,6 +70,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/waitlist', require('./routes/waitlist'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/reviews', require('./routes/reviews'));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Little Sunshine API is running', time: new Date() });
