@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { PROCARE_WAITLIST_URL } from '../../config';
 import './Navbar.css';
 
 const navLinks = [
@@ -58,6 +59,11 @@ export default function Navbar() {
             <Link to="/waitlist" className="nav-cta">
               Join Waitlist
             </Link>
+          </li>
+          <li>
+            <a href={PROCARE_WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="nav-cta nav-cta-alt">
+              Apply via Procare
+            </a>
           </li>
         </ul>
 

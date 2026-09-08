@@ -93,6 +93,15 @@
   transform: translateY(-1px);
 }
 
+.nav-cta-alt {
+  background: var(--green-brand) !important;
+  box-shadow: 0 4px 14px rgba(45, 122, 58, 0.3);
+}
+
+.nav-cta-alt:hover {
+  background: #235F2C !important;
+}
+
 .hamburger {
   display: none;
   flex-direction: column;

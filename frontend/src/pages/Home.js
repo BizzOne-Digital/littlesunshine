@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
 import toast from 'react-hot-toast';
+import { PROCARE_WAITLIST_URL } from '../config';
 import './Home.css';
 
 /* ---- SVG Icons ---- */
@@ -320,6 +321,7 @@ export default function Home() {
           </div>
           <div className="cta-actions">
             <Link to="/waitlist" className="btn-primary">Join Waitlist Now <ArrowSVG /></Link>
+            <a href={PROCARE_WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="btn-secondary">Apply via Procare</a>
             <Link to="/contact" className="btn-secondary">Contact Us</Link>
           </div>
         </div>
