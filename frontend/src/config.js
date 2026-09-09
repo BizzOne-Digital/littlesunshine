@@ -1,1 +1,1 @@
-export const PROCARE_WAITLIST_URL = 'https://schools.procareconnect.com/form/9e051c6f-f104-4f43-af36-dbb35fdafa95';
+export const PROCARE_WAITLIST_URL = 'https://schools.procareconnect.com/form/b21ec6cf-829e-4f77-b1f3-6c3b2a52a48a';
