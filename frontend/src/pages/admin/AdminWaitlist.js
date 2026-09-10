@@ -10,6 +10,18 @@ const STATUS_COLORS = {
   Waitlisted: '#7B4FAB', Declined: '#D12B2B'
 };
 
+const getAge = dob => {
+  if (!dob) return '—';
+  const birth = new Date(dob);
+  const now = new Date();
+  let years = now.getFullYear() - birth.getFullYear();
+  let months = now.getMonth() - birth.getMonth();
+  if (now.getDate() < birth.getDate()) months -= 1;
+  if (months < 0) { years -= 1; months += 12; }
+  if (years < 1) return `${months} mo`;
+  return months > 0 ? `${years}y ${months}mo` : `${years}y`;
+};
+
 export default function AdminWaitlist() {
   const { logout } = useAuth();
   const { admin } = useAuth();
@@ -98,8 +110,11 @@ export default function AdminWaitlist() {
                   <tr>
                     <th>Child Name</th>
                     <th>Parent</th>
+                    <th>DOB</th>
+                    <th>Age</th>
                     <th>Program</th>
                     <th>Schedule</th>
+                    <th>Start Date</th>
                     <th>Status</th>
                     <th>Submitted</th>
                   </tr>
@@ -109,8 +124,11 @@ export default function AdminWaitlist() {
                     <tr key={entry._id} onClick={() => setSelected(entry)} className={selected?._id === entry._id ? 'selected' : ''}>
                       <td><strong>{entry.childName}</strong></td>
                       <td>{entry.parentName}</td>
+                      <td style={{ fontSize: '0.82rem' }}>{entry.childDOB ? new Date(entry.childDOB).toLocaleDateString() : '—'}</td>
+                      <td style={{ fontSize: '0.82rem' }}>{getAge(entry.childDOB)}</td>
                       <td><span className="prog-badge">{entry.programType}</span></td>
                       <td style={{ fontSize: '0.82rem' }}>{entry.scheduleType}</td>
+                      <td style={{ fontSize: '0.82rem' }}>{entry.desiredStartDate ? new Date(entry.desiredStartDate).toLocaleDateString() : '—'}</td>
                       <td>
                         <span className="status-badge" style={{ background: STATUS_COLORS[entry.status] + '22', color: STATUS_COLORS[entry.status] }}>
                           {entry.status}
@@ -122,7 +140,7 @@ export default function AdminWaitlist() {
                     </tr>
                   ))}
                   {entries.length === 0 && (
-                    <tr><td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: 'var(--gray-text)' }}>No entries found</td></tr>
+                    <tr><td colSpan={9} style={{ textAlign: 'center', padding: '40px', color: 'var(--gray-text)' }}>No entries found</td></tr>
                   )}
                 </tbody>
               </table>
