@@ -75,6 +75,13 @@ export default function Contact() {
                   <p>littlesunshineelc23@gmail.com</p>
                 </div>
               </a>
+              <a href="mailto:lssboardofdirector@gmail.com" className="info-card">
+                <div className="info-icon email-icon"><EmailSVG /></div>
+                <div>
+                  <h4>Board of Directors</h4>
+                  <p>lssboardofdirector@gmail.com</p>
+                </div>
+              </a>
               <div className="info-card">
                 <div className="info-icon hours-icon"><ClockSVG /></div>
                 <div>
