@@ -105,9 +105,9 @@ export default function Waitlist() {
                 <strong>Questions?</strong>
                 <a href="tel:+13067500848">306-750-0848</a>
               </div>
-              <div className="sidebar-contact">
+              <div className="sidebar-contact procare-cta">
                 <strong>Prefer to apply directly?</strong>
-                <a href={PROCARE_WAITLIST_URL} target="_blank" rel="noopener noreferrer">Apply via Procare →</a>
+                <a href={PROCARE_WAITLIST_URL} target="_blank" rel="noopener noreferrer" className="btn-primary procare-btn">Apply via Procare →</a>
               </div>
             </div>
           </div>
