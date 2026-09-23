@@ -28,9 +28,10 @@
   width: 100%;
   margin-top: 8px;
   background: var(--green-brand);
+  color: var(--white) !important;
   box-shadow: 0 4px 20px rgba(45, 122, 58, 0.3);
 }
-.procare-btn.btn-primary:hover { background: #235F2C; }
+.procare-btn.btn-primary:hover { background: #235F2C; color: var(--white) !important; }
 
 .waitlist-form-card { background: var(--white); border-radius: 24px; padding: 40px; box-shadow: 0 8px 40px rgba(0,0,0,0.08); }
 .form-step h2 { font-size: 1.5rem; margin-bottom: 6px; }
